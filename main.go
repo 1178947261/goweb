@@ -39,6 +39,12 @@ func articlesIndexHandler(w http.ResponseWriter, r *http.Request) {
 
 func articlesStoreHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "创建新的文章")
+
+	title := r.PostFormValue("title")
+
+	fmt.Fprintf(w, "POST PostForm: %v <br>", r.PostForm)
+	fmt.Fprintf(w, "POST Form: %v <br>", r.Form)
+	fmt.Fprintf(w, "title 的值为: %v", title)
 }
 
 func forceHTMLMiddleware(next http.Handler) http.Handler {
