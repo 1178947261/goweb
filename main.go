@@ -38,6 +38,15 @@ func articlesStoreHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "创建新的文章")
 }
 
+func forceHTMLMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// 1. 设置标头
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		// 2. 继续处理请求
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	router := mux.NewRouter()
 
@@ -52,6 +61,7 @@ func main() {
 	router.NotFoundHandler = http.HandlerFunc(notFoundHandler)
 
 	// 通过命名路由获取 URL 示例
+	router.Use(forceHTMLMiddleware)
 	homeURL, _ := router.Get("home").URL()
 	fmt.Println("homeURL: ", homeURL)
 	articleURL, _ := router.Get("articles.show").URL("id", "23")
