@@ -45,7 +45,7 @@ func forceHTMLMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// 1. 设置标头
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		// 2. 继续处理请求
 		next.ServeHTTP(w, r)
 	})
@@ -81,11 +81,13 @@ func articlesCreateHandler(w http.ResponseWriter, r *http.Request) {
 	storeURL, _ := router.Get("articles.store").URL()
 	fmt.Fprintf(w, html, storeURL)
 }
-
 func main() {
 
 	router.HandleFunc("/", homeHandler).Methods("GET").Name("home")
-	//创建博文-路由
+	router.HandleFunc("/about", aboutHandler).Methods("GET").Name("about")
+	router.HandleFunc("/articles/{id:[0-9]+}", articlesShowHandler).Methods("GET").Name("articles.show")
+	router.HandleFunc("/articles", articlesIndexHandler).Methods("GET").Name("articles.index")
+	router.HandleFunc("/articles", articlesStoreHandler).Methods("POST").Name("articles.store")
 	router.HandleFunc("/articles/create", articlesCreateHandler).Methods("GET").Name("articles.create")
 	// 自定义 404 页面
 	router.NotFoundHandler = http.HandlerFunc(notFoundHandler)
