@@ -16,6 +16,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Article  对应一条文章数据
+type Article struct {
+	Title, Body string
+	ID          int64
+}
+
 var router = mux.NewRouter()
 
 var Db *sql.DB
@@ -123,7 +129,29 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 func articlesShowHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
-	fmt.Fprint(w, "文章 ID："+id)
+	query := "SELECT * FROM articles WHERE id = ?"
+	article := Article{}
+	err := Db.QueryRow(query, id).Scan(&article.ID, &article.Title, &article.Body)
+
+	// 3. 如果出现错误
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// 3.1 数据未找到
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprint(w, "404 文章未找到")
+		} else {
+			// 3.2 数据库错误
+			checkError(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprint(w, "500 服务器内部错误")
+		}
+	} else {
+		// 4. 读取成功，显示文章
+		tmpl, err := template.ParseFiles("resources/views/articles/show.gohtml")
+		checkError(err)
+		tmpl.Execute(w, article)
+	}
+
 }
 
 func articlesIndexHandler(w http.ResponseWriter, r *http.Request) {
