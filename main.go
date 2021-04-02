@@ -1,16 +1,23 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"html/template"
 	"net/http"
 	"net/url"
 	"strings"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
 var router = mux.NewRouter()
+
+// 初始化mysql 驱动
+func init() {
+	sql.Register("mysql", &MySQLDriver{})
+}
 
 // 创建博文表单数据
 type ArticlesFormData struct {
