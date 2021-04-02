@@ -46,6 +46,17 @@ func initDB() {
 	checkError(err)
 }
 
+func createTables() {
+	createArticlesSQL := `CREATE TABLE IF NOT EXISTS articles(
+    id bigint(20) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    title varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+    body longtext COLLATE utf8mb4_unicode_ci
+); `
+
+	_, err := Db.Exec(createArticlesSQL)
+	checkError(err)
+}
+
 func checkError(err error) {
 	if err != nil {
 		log.Fatal(err)
