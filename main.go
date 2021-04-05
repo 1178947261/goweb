@@ -3,6 +3,7 @@ package main
 import (
 	"awesomeProject/goweb/logger"
 	"awesomeProject/goweb/route"
+	"awesomeProject/goweb/types"
 	"database/sql"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
@@ -145,7 +146,7 @@ func articlesShowHandler(w http.ResponseWriter, r *http.Request) {
 		tmpl, err := template.New("show.gohtml").
 			Funcs(template.FuncMap{
 				"RouteName2URL": RouteName2URL,
-				"Int64ToString": Int64ToString,
+				"Int64ToString": types.Int64ToString,
 			}).
 			ParseFiles("resources/views/articles/show.gohtml")
 		logger.LogError(err)
@@ -163,11 +164,6 @@ func RouteName2URL(routeName string, pairs ...string) string {
 	}
 
 	return url.String()
-}
-
-// Int64ToString 将 int64 转换为 string
-func Int64ToString(num int64) string {
-	return strconv.FormatInt(num, 10)
 }
 
 func articlesIndexHandler(w http.ResponseWriter, r *http.Request) {
