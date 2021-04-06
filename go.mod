@@ -12,4 +12,6 @@ require (
 	github.com/pelletier/go-toml v1.8.1 // indirect
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/sys v0.0.0-20210331175145-43e1dd70ce54 // indirect
+	gorm.io/driver/mysql v1.0.5
+	gorm.io/gorm v1.21.6
 )

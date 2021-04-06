@@ -440,6 +440,8 @@ func main() {
 	createTables()
 	database.Initialize()
 	Db = database.DB
+
+	bootstrap.SetupDB() //初始化数据库
 	router = bootstrap.SetupRoute()
 	http.ListenAndServe(":3000", router)
 }
