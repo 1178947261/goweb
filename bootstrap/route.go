@@ -1,0 +1,27 @@
+package bootstrap
+
+import (
+	"awesomeProject/goweb/http/controllers"
+	routes2 "awesomeProject/goweb/routes"
+	"net/http"
+
+	"github.com/gorilla/mux"
+)
+
+// SetupRoute 路由初始化
+func SetupRoute() *mux.Router {
+	router := mux.NewRouter()
+	routes2.RegisterWebRoutes(router)
+	return router
+}
+
+// RegisterWebRoutes 注册网页相关路由
+func RegisterWebRoutes(r *mux.Router) {
+	// 静态页面
+	pc := new(controllers.PagesController)
+	r.NotFoundHandler = http.HandlerFunc(pc.NotFound)
+	r.HandleFunc("/", pc.Home).Methods("GET").Name("home")
+	r.HandleFunc("/about", pc.About).Methods("GET").Name("about")
+	ac := new(controllers.ArticlesController)
+	r.HandleFunc("/articles/{id:[0-9]+}", ac.Show).Methods("GET").Name("articles.show")
+}

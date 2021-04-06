@@ -1,10 +1,10 @@
 package main
 
 import (
+	"awesomeProject/goweb/Handler"
+	"awesomeProject/goweb/bootstrap"
 	"awesomeProject/goweb/database"
 	"awesomeProject/goweb/logger"
-	"awesomeProject/goweb/route"
-	"awesomeProject/goweb/types"
 	"database/sql"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
@@ -125,37 +125,6 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>请求页面未找到 :(</h1><p>如有疑惑，请联系我们。</p>")
 }
 
-func articlesShowHandler(w http.ResponseWriter, r *http.Request) {
-	// 1. 获取 URL 参数
-	id := route.GetRouteVariable("id", r)
-	// 2. 读取对应的文章数据
-	article, err := getArticleByID(id)
-	// 3. 如果出现错误
-	if err != nil {
-		if err == sql.ErrNoRows {
-			// 3.1 数据未找到
-			w.WriteHeader(http.StatusNotFound)
-			fmt.Fprint(w, "404 文章未找到")
-		} else {
-			// 3.2 数据库错误
-			logger.LogError(err)
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprint(w, "500 服务器内部错误")
-		}
-	} else {
-		// 4. 读取成功，显示文章
-		tmpl, err := template.New("show.gohtml").
-			Funcs(template.FuncMap{
-				"RouteName2URL": RouteName2URL,
-				"Int64ToString": types.Int64ToString,
-			}).
-			ParseFiles("resources/views/articles/show.gohtml")
-		logger.LogError(err)
-		tmpl.Execute(w, article)
-	}
-
-}
-
 // RouteName2URL 通过路由名称来获取 URL
 func RouteName2URL(routeName string, pairs ...string) string {
 	url, err := router.Get(routeName).URL(pairs...)
@@ -271,7 +240,7 @@ func articlesCreateHandler(w http.ResponseWriter, r *http.Request) {
 func articlesEditHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 1. 获取 URL 参数
-	id := route.GetRouteVariable("id", r)
+	id := Handler.GetRouteVariable("id", r)
 
 	// 2. 读取对应的文章数据
 	article, err := getArticleByID(id)
@@ -305,7 +274,7 @@ func articlesEditHandler(w http.ResponseWriter, r *http.Request) {
 
 func articlesUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	// 1. 获取 URL 参数
-	id := route.GetRouteVariable("id", r)
+	id := Handler.GetRouteVariable("id", r)
 
 	// 2. 读取对应的文章数据
 	_, err := getArticleByID(id)
@@ -408,7 +377,7 @@ func validateArticleFormData(title string, body string) map[string]string {
 func articlesDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 1. 获取 URL 参数
-	id := route.GetRouteVariable("id", r)
+	id := Handler.GetRouteVariable("id", r)
 
 	// 2. 读取对应的文章数据
 	article, err := getArticleByID(id)
@@ -471,8 +440,6 @@ func main() {
 	createTables()
 	database.Initialize()
 	Db = database.DB
-	route.Initialize()
-	router = route.Router
-
+	router = bootstrap.SetupRoute()
 	http.ListenAndServe(":3000", router)
 }
