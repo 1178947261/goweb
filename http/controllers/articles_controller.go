@@ -3,9 +3,11 @@ package controllers
 import (
 	"awesomeProject/goweb/Handler"
 	"awesomeProject/goweb/logger"
+	"awesomeProject/goweb/models/article"
 	"awesomeProject/goweb/types"
-	"database/sql"
 	"fmt"
+	"gorm.io/gorm"
+	"html/template"
 	"net/http"
 )
 
@@ -17,11 +19,11 @@ func (*ArticlesController) Show(w http.ResponseWriter, r *http.Request) {
 	id := Handler.GetRouteVariable("id", r)
 
 	// 2. 读取对应的文章数据
-	article, err := getArticleByID(id)
+	article, err := article.Get(id)
 
 	// 3. 如果出现错误
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == gorm.ErrRecordNotFound {
 			// 3.1 数据未找到
 			w.WriteHeader(http.StatusNotFound)
 			fmt.Fprint(w, "404 文章未找到")
@@ -35,7 +37,7 @@ func (*ArticlesController) Show(w http.ResponseWriter, r *http.Request) {
 		// 4. 读取成功，显示文章
 		tmpl, err := template.New("show.gohtml").
 			Funcs(template.FuncMap{
-				"RouteName2URL": routes.Name2URL,
+				"RouteName2URL": Handler.Name2URL,
 				"Int64ToString": types.Int64ToString,
 			}).
 			ParseFiles("resources/views/articles/show.gohtml")
