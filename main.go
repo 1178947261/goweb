@@ -1,6 +1,7 @@
 package main
 
 import (
+	"awesomeProject/goweb/database"
 	"awesomeProject/goweb/logger"
 	"awesomeProject/goweb/route"
 	"awesomeProject/goweb/types"
@@ -468,6 +469,8 @@ func (a Article) Delete() (rowsAffected int64, err error) {
 func main() {
 	initDB()
 	createTables()
+	database.Initialize()
+	Db = database.DB
 	route.Initialize()
 	router = route.Router
 
