@@ -1,6 +1,7 @@
 package route
 
 import (
+	"awesomeProject/goweb/http/controllers"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -27,4 +28,14 @@ func Name2URL(routeName string, pairs ...string) string {
 func GetRouteVariable(parameterName string, r *http.Request) string {
 	vars := mux.Vars(r)
 	return vars[parameterName]
+}
+
+// RegisterWebRoutes 注册网页相关路由
+func RegisterWebRoutes(r *mux.Router) {
+
+	// 静态页面
+	pc := new(controllers.PagesController)
+	r.HandleFunc("/", pc.Home).Methods("GET").Name("home")
+	r.HandleFunc("/about", pc.About).Methods("GET").Name("about")
+	r.NotFoundHandler = http.HandlerFunc(pc.NotFound)
 }
