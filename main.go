@@ -2,6 +2,7 @@ package main
 
 import (
 	"awesomeProject/goweb/bootstrap"
+	"awesomeProject/goweb/http/middlewares"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
@@ -23,5 +24,5 @@ func main() {
 	bootstrap.SetupDB() //初始化数据库
 	router = bootstrap.SetupRoute()
 
-	http.ListenAndServe(":3000", router)
+	http.ListenAndServe(":3000", middlewares.RemoveTrailingSlash(router))
 }

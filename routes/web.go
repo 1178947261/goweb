@@ -2,6 +2,7 @@ package routes
 
 import (
 	"awesomeProject/goweb/http/controllers"
+	"awesomeProject/goweb/http/middlewares"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -10,6 +11,8 @@ import (
 // RegisterWebRoutes 注册网页相关路由
 func RegisterWebRoutes(r *mux.Router) {
 	// 静态页面
+	// 中间件：强制内容类型为 HTML
+	r.Use(middlewares.ForceHTML)
 	pc := new(controllers.PagesController)
 	r.NotFoundHandler = http.HandlerFunc(pc.NotFound)
 	r.HandleFunc("/", pc.Home).Methods("GET").Name("home")
