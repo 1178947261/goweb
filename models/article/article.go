@@ -8,10 +8,9 @@ import (
 
 // Article 文章模型
 type Article struct {
-	ID    int64
+	models.BaseModel
 	Title string
 	Body  string
-	models.BaseModel
 }
 
 // Link 方法用来生成文章链接
