@@ -1,7 +1,7 @@
 package model
 
 import (
-	"awesomeProject/goweb/logger"
+	"awesomeProject/goweb/pkg/logger"
 
 	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"

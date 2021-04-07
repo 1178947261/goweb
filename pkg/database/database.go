@@ -1,7 +1,7 @@
 package database
 
 import (
-	"awesomeProject/goweb/logger"
+	"awesomeProject/goweb/pkg/logger"
 	"database/sql"
 	"time"
 

@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"awesomeProject/goweb/Handler"
-	"awesomeProject/goweb/logger"
 	"awesomeProject/goweb/models/article"
-	"awesomeProject/goweb/view"
+	"awesomeProject/goweb/pkg/logger"
+	"awesomeProject/goweb/pkg/view"
 	"fmt"
 	"gorm.io/gorm"
 	"net/http"

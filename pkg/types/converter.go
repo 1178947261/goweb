@@ -1,7 +1,7 @@
 package types
 
 import (
-	"awesomeProject/goweb/logger"
+	"awesomeProject/goweb/pkg/logger"
 	"strconv"
 )
 

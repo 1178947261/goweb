@@ -1,9 +1,9 @@
 package article
 
 import (
-	"awesomeProject/goweb/logger"
-	"awesomeProject/goweb/model"
-	"awesomeProject/goweb/types"
+	"awesomeProject/goweb/pkg/logger"
+	"awesomeProject/goweb/pkg/model"
+	"awesomeProject/goweb/pkg/types"
 )
 
 // Get 通过 ID 获取文章

@@ -1,7 +1,7 @@
 package bootstrap
 
 import (
-	"awesomeProject/goweb/model"
+	"awesomeProject/goweb/pkg/model"
 	"time"
 )
 
