@@ -246,7 +246,7 @@ func (*ArticlesController) Show(w http.ResponseWriter, r *http.Request) {
 		// 4.3 解析模板文件
 		tmpl, err := template.New("show.gohtml").
 			Funcs(template.FuncMap{
-				"RouteName2URL": route.Name2URL,
+				"RouteName2URL": Handler.Name2URL,
 				"Int64ToString": types.Int64ToString,
 			}).ParseFiles(newFiles...)
 		logger.LogError(err)
