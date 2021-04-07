@@ -2,6 +2,7 @@ package article
 
 import (
 	"awesomeProject/goweb/Handler"
+	"awesomeProject/goweb/models"
 	"strconv"
 )
 
@@ -10,6 +11,7 @@ type Article struct {
 	ID    int64
 	Title string
 	Body  string
+	models.BaseModel
 }
 
 // Link 方法用来生成文章链接
