@@ -7,8 +7,7 @@
     <div class="blog-post bg-white p-5 rounded shadow mb-4">
 
       <h3>编辑文章</h3>
-
-      <form action="{{ RouteName2URL "articles.update" "id" .Article.GetStringID }}" method="post">
+      <form action="{{ RouteName2URL "articles.update" "id" .ArticlesFormData.Article.GetStringID }}" method="post">
 
         {{template "form-fields" . }}
 

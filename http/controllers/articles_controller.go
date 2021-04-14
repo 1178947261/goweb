@@ -23,8 +23,10 @@ type ArticlesFormData struct {
 
 // Create 文章创建页面
 func (*ArticlesController) Create(w http.ResponseWriter, r *http.Request) {
+	view.Render(w, view.D{
+		"Article": ArticlesFormData{},
+	}, "articles.create", "articles._form_field")
 
-	view.Render(w, ArticlesFormData{}, "articles.create", "articles._form_field")
 }
 
 // 文章验证页面
@@ -71,11 +73,12 @@ func (*ArticlesController) Store(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 
-		view.Render(w, ArticlesFormData{
-			Title:  title,
-			Body:   body,
-			Errors: errors,
-		}, "articles.create", "articles._form_field")
+		view.Render(w, view.D{
+			"ArticlesFormData": ArticlesFormData{
+				Title:  title,
+				Body:   body,
+				Errors: errors,
+			}}, "articles.create", "articles._form_field")
 	}
 }
 
@@ -102,12 +105,12 @@ func (*ArticlesController) Edit(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// 4. 读取成功，显示编辑文章表单
-		view.Render(w, ArticlesFormData{
+		view.Render(w, view.D{"ArticlesFormData": ArticlesFormData{
 			Title:   _article.Title,
 			Body:    _article.Body,
 			Article: _article,
 			Errors:  nil,
-		}, "articles.edit", "articles._form_field")
+		}}, "articles.edit", "articles._form_field")
 	}
 }
 
@@ -164,13 +167,22 @@ func (*ArticlesController) Update(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, "您没有做任何更改！")
 			}
 		} else {
-			// 4.3 表单验证不通过，显示理由
-			view.Render(w, ArticlesFormData{
+			aa := ArticlesFormData{
 				Title:   title,
 				Body:    body,
 				Article: _article,
 				Errors:  errors,
-			}, "articles.edit", "articles._form_field")
+			}
+			data := aa
+			fmt.Println(data)
+
+			// 4.3 表单验证不通过，显示理由
+			view.Render(w, view.D{"ArticlesFormData": ArticlesFormData{
+				Title:   title,
+				Body:    body,
+				Article: _article,
+				Errors:  errors,
+			}}, "articles.edit", "articles._form_field")
 		}
 	}
 }
