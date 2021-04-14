@@ -55,6 +55,12 @@ func (*AuthController) Login(w http.ResponseWriter, r *http.Request) {
 	view.RenderSimple(w, view.D{}, "auth.login")
 }
 
+// Logout 退出登录
+func (*AuthController) Logout(w http.ResponseWriter, r *http.Request) {
+	auth.Logout()
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
 // DoLogin 处理登录表单提交
 func (*AuthController) DoLogin(w http.ResponseWriter, r *http.Request) {
 	// 1. 初始化表单数据

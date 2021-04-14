@@ -15,9 +15,7 @@ func RegisterWebRoutes(r *mux.Router) {
 	//r.Use(middlewares.ForceHTML)
 	pc := new(controllers.PagesController)
 	r.NotFoundHandler = http.HandlerFunc(pc.NotFound)
-	r.HandleFunc("/", pc.Home).Methods("GET").Name("home")
 	r.HandleFunc("/about", pc.About).Methods("GET").Name("about")
-
 	// 文章页面
 	ac := new(controllers.ArticlesController)
 	r.HandleFunc("/", ac.Index).Methods("GET").Name("home")
@@ -41,7 +39,9 @@ func RegisterWebRoutes(r *mux.Router) {
 	// 用户登录
 	r.HandleFunc("/auth/login", auc.Login).Methods("GET").Name("auth.login")
 	r.HandleFunc("/auth/dologin", auc.DoLogin).Methods("POST").Name("auth.dologin")
-
+	// 用户推出登录
+	r.HandleFunc("/auth/dologin", auc.DoLogin).Methods("POST").Name("auth.dologin")
+	r.HandleFunc("/auth/logout", auc.Logout).Methods("POST").Name("auth.logout")
 	// 开始会话
 	r.Use(middlewares.StartSession)
 }
