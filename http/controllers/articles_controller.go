@@ -5,6 +5,7 @@ import (
 	"awesomeProject/goweb/models/article"
 	"awesomeProject/goweb/pkg/logger"
 	"awesomeProject/goweb/pkg/view"
+	"awesomeProject/goweb/requests"
 	"fmt"
 	"gorm.io/gorm"
 	"net/http"
@@ -52,33 +53,31 @@ func validateArticleFormData(title string, body string) map[string]string {
 // Store 文章创建页面
 func (*ArticlesController) Store(w http.ResponseWriter, r *http.Request) {
 
-	title := r.PostFormValue("title")
-	body := r.PostFormValue("body")
+	// 1. 初始化数据
+	_article := article.Article{
+		Title: r.PostFormValue("title"),
+		Body:  r.PostFormValue("body"),
+	}
 
-	errors := validateArticleFormData(title, body)
+	// 2. 表单验证
+	errors := requests.ValidateArticleForm(_article)
 
-	// 检查是否有错误
+	// 3. 检测错误
 	if len(errors) == 0 {
-		_article := article.Article{
-			Title: title,
-			Body:  body,
-		}
-
+		// 创建文章
 		_article.Create()
 		if _article.ID > 0 {
-			fmt.Fprint(w, "插入成功，ID 为"+_article.GetStringID())
+			indexURL := Handler.Name2URL("articles.show", "id", _article.GetStringID())
+			http.Redirect(w, r, indexURL, http.StatusFound)
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprint(w, "创建文章失败，请联系管理员")
 		}
 	} else {
-
 		view.Render(w, view.D{
-			"ArticlesFormData": ArticlesFormData{
-				Title:  title,
-				Body:   body,
-				Errors: errors,
-			}}, "articles.create", "articles._form_field")
+			"Article": _article,
+			"Errors":  errors,
+		}, "articles.create", "articles._form_field")
 	}
 }
 
